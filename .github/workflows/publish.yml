@@ -1,0 +1,62 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    name: Publish to PowerShell Gallery
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install mise
+        uses: jdx/mise-action@v3
+        with:
+          cache: true
+          install: true
+
+      - name: Validate Module Manifest
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Test-ModuleManifest -Path ./GAM7/GAM7.psd1
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = './tests'
+          $config.Run.Exit = $true
+          Invoke-Pester -Configuration $config
+
+      - name: Publish to PowerShell Gallery
+        shell: pwsh
+        env:
+          PSGALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
+        run: |
+          if (-not $env:PSGALLERY_API_KEY) {
+            Write-Error "PSGALLERY_API_KEY secret not found"
+            exit 1
+          }
+
+          Write-Host "Publishing GAM7 module to PowerShell Gallery..."
+          Publish-Module -Path ./GAM7 -NuGetApiKey $env:PSGALLERY_API_KEY -Verbose
+
+      - name: Create Release Asset
+        shell: pwsh
+        run: |
+          Compress-Archive -Path ./GAM7 -DestinationPath ./GAM7.zip
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./GAM7.zip
+          asset_name: GAM7.zip
+          asset_content_type: application/zip
