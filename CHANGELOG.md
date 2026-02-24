@@ -63,5 +63,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Minor** (0.x.0): New features, backward compatible
 - **Patch** (0.0.x): Bug fixes, minor improvements
 
-[Unreleased]: https://github.com/yourusername/gmail_sunset_searcher/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/yourusername/gmail_sunset_searcher/releases/tag/v1.0.0
+[Unreleased]: https://github.com/electblake/gmail_sunset_searcher/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/electblake/gmail_sunset_searcher/releases/tag/v1.0.0

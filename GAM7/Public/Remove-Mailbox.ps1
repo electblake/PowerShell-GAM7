@@ -14,7 +14,7 @@ function Remove-Mailbox {
 .OUTPUTS
     PSCustomObject with Email, OrgUnit, and Deleted status.
 #>
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'High')]
 param(
   [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
   [string] $Email
@@ -22,10 +22,14 @@ param(
 
 process {
   $activity = 'Remove-Mailbox'
-  Write-Host "$activity : $Email" -ForegroundColor Cyan
+  Write-Verbose "$activity : $Email"
 
   Write-Progress -Activity $activity -Status 'Fetching user info...' -PercentComplete 20
   $user = & gam info user $Email formatjson | ConvertFrom-Json
+
+  if (-not $PSCmdlet.ShouldProcess($Email, 'Delete Google Workspace user account')) {
+    return
+  }
 
   Write-Progress -Activity $activity -Status 'Deleting account...' -PercentComplete 60
   & gam delete user $Email | Out-Null

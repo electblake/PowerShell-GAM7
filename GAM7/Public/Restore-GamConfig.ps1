@@ -53,7 +53,7 @@ function Restore-GamConfig {
     Write-Warning "Restoring directly to GAM config directory: $OutputDir"
   }
 
-  Write-Host "$activity : $InputPath -> $OutputDir" -ForegroundColor Cyan
+  Write-Verbose "$activity : $InputPath -> $OutputDir"
 
   if (-not (Test-Path $InputPath)) {
     Write-Warning "Backup file not found: $InputPath"
@@ -66,17 +66,8 @@ function Restore-GamConfig {
   }
 
   Write-Progress -Activity $activity -Status 'Decrypting backup...' -PercentComplete 30
-  $encrypted = [System.IO.File]::ReadAllText($InputPath).Trim()
-  $secure = ConvertTo-SecureString -String $encrypted -Key $key
-  $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
-  try {
-    $b64 = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
-  }
-  finally {
-    [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
-  }
-
-  $zipBytes = [Convert]::FromBase64String($b64)
+  $encryptedBytes = [System.IO.File]::ReadAllBytes($InputPath)
+  $zipBytes = Unprotect-GamData -CipherBytes $encryptedBytes -AesKey $key
 
   $tempZip = Join-Path ([System.IO.Path]::GetTempPath()) "gam-restore-$(Get-Date -Format 'yyyyMMddHHmmss').zip"
 

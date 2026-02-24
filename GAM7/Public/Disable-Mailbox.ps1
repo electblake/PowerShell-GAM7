@@ -22,7 +22,7 @@ param(
 
 process {
   $activity = 'Disable-Mailbox'
-  Write-Host "$activity : $Email" -ForegroundColor Cyan
+  Write-Verbose "$activity : $Email"
 
   Write-Progress -Activity $activity -Status 'Fetching user info...' -PercentComplete 20
   $user = & gam info user $Email formatjson | ConvertFrom-Json

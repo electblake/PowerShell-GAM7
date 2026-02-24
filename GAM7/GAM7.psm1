@@ -1,6 +1,14 @@
 # GAM7 PowerShell Module
 # Consolidates GAM7 utilities for Google Workspace management, backup, and migration
 
+# Dot-source private helper functions
+$PrivateFunctionPath = Join-Path $PSScriptRoot 'Private'
+if (Test-Path $PrivateFunctionPath) {
+  Get-ChildItem -Path $PrivateFunctionPath -Filter '*.ps1' -File | ForEach-Object {
+    . $_.FullName
+  }
+}
+
 # Dot-source all public functions
 $PublicFunctionPath = Join-Path $PSScriptRoot 'Public'
 $PublicFunctions = @(

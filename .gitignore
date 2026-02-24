@@ -2,3 +2,7 @@ exports
 GAM-docs
 .claude/settings.local.json
 .seed
+artifacts/
+.local-gallery/
+testResults.xml
+*.nupkg

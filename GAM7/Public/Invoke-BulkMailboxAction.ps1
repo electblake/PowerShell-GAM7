@@ -2,7 +2,7 @@ function Invoke-BulkMailboxAction {
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Interactive mailbox management — list, select, and act on mailboxes.
+    Interactive mailbox management - list, select, and act on mailboxes.
 .DESCRIPTION
     Loads all mailboxes via Get-Mailbox, presents them for multi-selection,
     then applies the chosen action (Enable, Disable, or Export) using the
@@ -44,7 +44,7 @@ $actions = @(
     [PSCustomObject]@{ Action = 'Export';  Description = 'Export messages to .eml files'           }
 )
 
-# 3 & 4. Select action — Esc returns to mailbox picker
+# 3 & 4. Select action - Esc returns to mailbox picker
 while ($true) {
     $action = $actions | Out-ConsoleGridView -Title 'Select action  (Esc = back)' -OutputMode Single
     if (-not $action) {

@@ -1,7 +1,7 @@
 function Import-GamAuthSecure {
 <#
 .SYNOPSIS
-    Decrypts AES-encrypted SecureString files back into individual GAM7 config and auth files.
+    Decrypts AES-encrypted files back into individual GAM7 config and auth files.
 .DESCRIPTION
     Decrypts encrypted GAM config files using AES-256 decryption with a provided key.
     Restores sensitive files from encrypted backups for use with GAM.
@@ -53,7 +53,7 @@ function Import-GamAuthSecure {
     Write-Warning "Restoring directly to GAM config directory: $OutputDir"
   }
 
-  Write-Host "$activity : $InputDir -> $OutputDir" -ForegroundColor Cyan
+  Write-Verbose "$activity : $InputDir -> $OutputDir"
 
   if (-not (Test-Path $InputDir)) {
     Write-Warning "Input directory not found: $InputDir"
@@ -68,16 +68,8 @@ function Import-GamAuthSecure {
 
   $decryptFile = {
     param([string]$SourcePath, [string]$DestPath, [byte[]]$AesKey)
-    $encrypted = [System.IO.File]::ReadAllText($SourcePath).Trim()
-    $secure = ConvertTo-SecureString -String $encrypted -Key $AesKey
-    $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
-    try {
-      $b64 = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
-    }
-    finally {
-      [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
-    }
-    $rawBytes = [Convert]::FromBase64String($b64)
+    $encryptedBytes = [System.IO.File]::ReadAllBytes($SourcePath)
+    $rawBytes = Unprotect-GamData -CipherBytes $encryptedBytes -AesKey $AesKey
     [System.IO.File]::WriteAllBytes($DestPath, $rawBytes)
   }
 

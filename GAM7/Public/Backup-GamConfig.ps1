@@ -4,7 +4,7 @@ function Backup-GamConfig {
     Backs up the entire GAM7 config folder as a single AES-encrypted artifact.
 .DESCRIPTION
     Compresses the GAM config directory into a zip archive, then encrypts
-    the archive bytes as a SecureString using the provided AES key.
+    the archive bytes using AES-256 with the provided key.
     Produces a single .encrypted file.
 .EXAMPLE
     Backup-GamConfig -KeyFile ./gam-encryption.key
@@ -37,7 +37,7 @@ function Backup-GamConfig {
     }
   }
 
-  Write-Host "$activity : $GamConfigDir" -ForegroundColor Cyan
+  Write-Verbose "$activity : $GamConfigDir"
 
   if (-not (Test-Path $GamConfigDir)) {
     Write-Warning "GAM config directory not found: $GamConfigDir"
@@ -72,16 +72,14 @@ function Backup-GamConfig {
 
     Write-Progress -Activity $activity -Status 'Encrypting backup...' -PercentComplete 60
     $zipBytes = [System.IO.File]::ReadAllBytes($tempZip)
-    $b64 = [Convert]::ToBase64String($zipBytes)
-    $secure = ConvertTo-SecureString -String $b64 -AsPlainText -Force
-    $encrypted = ConvertFrom-SecureString -SecureString $secure -Key $key
+    $encryptedBytes = Protect-GamData -PlainBytes $zipBytes -AesKey $key
 
     Write-Progress -Activity $activity -Status 'Writing encrypted backup...' -PercentComplete 85
     $outputDir = Split-Path $OutputPath -Parent
     if ($outputDir -and -not (Test-Path $outputDir)) {
       New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
     }
-    [System.IO.File]::WriteAllText($OutputPath, $encrypted)
+    [System.IO.File]::WriteAllBytes($OutputPath, $encryptedBytes)
 
     Write-Progress -Activity $activity -Completed
 

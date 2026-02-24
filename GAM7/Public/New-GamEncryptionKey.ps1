@@ -16,7 +16,7 @@ function New-GamEncryptionKey {
 .OUTPUTS
     PSCustomObject with OutputPath and a security warning.
 #>
-  [CmdletBinding()]
+  [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
   param(
     [Parameter()]
     [string]$OutputPath = (Join-Path (Get-Location) 'gam-encryption.key'),
@@ -27,10 +27,14 @@ function New-GamEncryptionKey {
 
   process {
     $activity = 'New-GamEncryptionKey'
-    Write-Host "$activity : $OutputPath" -ForegroundColor Cyan
+    Write-Verbose "$activity : $OutputPath"
 
     if ((Test-Path $OutputPath) -and -not $Force) {
       Write-Warning "Key file already exists at $OutputPath. Use -Force to overwrite."
+      return
+    }
+
+    if (-not $PSCmdlet.ShouldProcess($OutputPath, 'Create encryption key file')) {
       return
     }
 

@@ -6,6 +6,8 @@ function Export-Mailbox {
     Exports messages from a Google Workspace user's mailbox to individual .eml files.
     Supports filtering by search query. Automatically renames files by receipt date for
     natural sorting. Skips suspended and archived accounts.
+    When no query is provided, exports all non-Spam/non-Trash messages so counts align
+    with Get-Mailbox message totals.
 .PARAMETER Email
     The email address of the mailbox to export.
 .PARAMETER Suspended
@@ -14,6 +16,7 @@ function Export-Mailbox {
     Whether the account is archived (used for pipeline filtering).
 .PARAMETER Query
     Optional Gmail search query to filter messages (e.g., "from:example.com" or "WorkSafeBC").
+    Default: -in:spam -in:trash
 .EXAMPLE
     Export-Mailbox -Email user@domain.com
 .EXAMPLE
@@ -39,31 +42,29 @@ process {
     $activity     = 'Export-Mailbox'
 
     if ($Suspended) {
-        Write-Warning "Skipping $Email — account is suspended"
+        Write-Warning "Skipping $Email - account is suspended"
         return
     }
     if ($Archived) {
-        Write-Warning "Skipping $Email — account is archived"
+        Write-Warning "Skipping $Email - account is archived"
         return
     }
-    $folderSuffix = if ($Query) { $Query } else { 'all' }
+    $hasCustomQuery = -not [string]::IsNullOrWhiteSpace($Query)
+    $effectiveQuery = if ($hasCustomQuery) { $Query.Trim() } else { '-in:spam -in:trash' }
+    $folderSuffix = if ($hasCustomQuery) { $effectiveQuery } else { 'all' }
     $OutDir       = "./exports/$Email+$folderSuffix"
 
-    Write-Host "$activity : $Email" -ForegroundColor Cyan
-    Write-Host "Query     : $(if ($Query) { $Query } else { '(all messages)' })" -ForegroundColor Cyan
-    Write-Host "Output    : $OutDir" -ForegroundColor Cyan
+    Write-Verbose "$activity : $Email"
+    Write-Verbose "Query     : $effectiveQuery"
+    Write-Verbose "Output    : $OutDir"
 
     Write-Progress -Activity $activity -Status 'Creating export directory...' -PercentComplete 5
     New-Item -ItemType Directory -Path $OutDir -Force | Out-Null
 
     Write-Progress -Activity $activity -Status 'Exporting messages via GAM...' -PercentComplete 10
 
-    # GAM outputs per-message progress to stdout — let it flow through as the primary progress indicator
-    if ($Query) {
-        & gam user $Email export messages query $Query max_to_export 0 targetfolder $OutDir overwrite
-    } else {
-        & gam user $Email export messages matchlabel allmail max_to_export 0 targetfolder $OutDir overwrite
-    }
+    # GAM outputs per-message progress to stdout - let it flow through as the primary progress indicator
+    & gam user $Email export messages query $effectiveQuery max_to_export 0 targetfolder $OutDir overwrite
 
     # Rename exported files: yyyy-MM-dd_HHmmss_Msg-{id}.eml so they sort naturally by date
     Write-Progress -Activity $activity -Status 'Renaming files by receipt date...' -PercentComplete 90
@@ -103,7 +104,7 @@ process {
 
     [PSCustomObject]@{
         Email     = $Email
-        Query     = if ($Query) { $Query } else { '(all)' }
+        Query     = $effectiveQuery
         OutputDir = $OutDir
         Exported  = $exportedFiles.Count
         Renamed   = $renamed

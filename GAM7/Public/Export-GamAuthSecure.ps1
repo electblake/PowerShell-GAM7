@@ -1,7 +1,7 @@
 function Export-GamAuthSecure {
   <#
 .SYNOPSIS
-    Encrypts individual GAM7 config and auth files into AES-encrypted SecureString files.
+    Encrypts individual GAM7 config and auth files into AES-encrypted files.
 .DESCRIPTION
     Encrypts specified GAM config files using AES-256 encryption with a provided key.
     Creates encrypted copies of sensitive files for secure backup and transfer.
@@ -34,7 +34,7 @@ function Export-GamAuthSecure {
     }
   }
 
-  Write-Host "$activity : $GamConfigDir -> $OutputDir" -ForegroundColor Cyan
+  Write-Verbose "$activity : $GamConfigDir -> $OutputDir"
 
   if (-not (Test-Path $GamConfigDir)) {
     Write-Warning "GAM config directory not found: $GamConfigDir"
@@ -73,10 +73,8 @@ function Export-GamAuthSecure {
   $encryptFile = {
     param([string]$SourcePath, [string]$DestPath, [byte[]]$AesKey)
     $rawBytes = [System.IO.File]::ReadAllBytes($SourcePath)
-    $b64 = [Convert]::ToBase64String($rawBytes)
-    $secure = ConvertTo-SecureString -String $b64 -AsPlainText -Force
-    $encrypted = ConvertFrom-SecureString -SecureString $secure -Key $AesKey
-    [System.IO.File]::WriteAllText($DestPath, $encrypted)
+    $encryptedBytes = Protect-GamData -PlainBytes $rawBytes -AesKey $AesKey
+    [System.IO.File]::WriteAllBytes($DestPath, $encryptedBytes)
   }
 
   $exported = 0

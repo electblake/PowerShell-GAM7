@@ -31,7 +31,6 @@ Import-Module ./GAM7
 ```powershell
 Install-Module -Name GAM7
 Import-Module GAM7
-Install-PS
 ```
 
 ## Quick Start
@@ -62,7 +61,7 @@ Get-Mailbox | Where-Object { $_.LastLogin -eq 'Never' } | Disable-Mailbox
 ### Export mailboxes
 
 ```powershell
-# Export all messages for a user
+# Export all non-Spam/non-Trash messages for a user (matches Get-Mailbox counts)
 Export-Mailbox -Email user@domain.com
 
 # Export with search query
@@ -128,6 +127,8 @@ Get-Command -Module GAM7
 ```
 
 ## Examples
+
+More end-to-end examples are included in `GAM7/Examples/`.
 
 ### Example 1: Disable inactive accounts
 
@@ -195,39 +196,43 @@ The GAM7 module follows cohesive design patterns:
 - **Non-terminating errors** - Uses warnings for expected conditions
 - **Stateless functions** - No global state or tight coupling
 
-See [docs/PATTERNS.md](docs/PATTERNS.md) for detailed design patterns.
+See [GAM7/PATTERNS.md](GAM7/PATTERNS.md) for detailed design patterns.
 
 ## Development
 
 ### Running Tests
 
 ```powershell
-# Run Pester tests (when available)
-Invoke-Pester
+# Validate manifest
+Test-ModuleManifest -Path ./GAM7/GAM7.psd1
+
+# Run ScriptAnalyzer (Microsoft guidance recommends Warning severity)
+Invoke-ScriptAnalyzer -Path ./GAM7 -Recurse -Severity Warning
+
+# Run tests
+Invoke-Pester -Path ./tests -CI
 ```
 
 ### Building
 
 ```powershell
-# Build module (when available)
-./build.ps1
+# Create a zip package in ./artifacts
+Compress-Archive -Path ./GAM7 -DestinationPath ./artifacts/GAM7.zip -Force
 ```
 
 ### Contributing
 
-Contributions are welcome! Please follow the cohesive patterns documented in [docs/PATTERNS.md](docs/PATTERNS.md).
+Contributions are welcome! Please follow the cohesive patterns documented in [GAM7/PATTERNS.md](GAM7/PATTERNS.md).
 
 ## Documentation
 
-- [Design Patterns](docs/PATTERNS.md) - Module design patterns and conventions
-- [GAM Wiki](docs/gam-wiki/) - Complete GAM7 documentation and examples
-- [Prerequisites](GAM7/PREREQUISITES.md) - System requirements
+- [Design Patterns](GAM7/PATTERNS.md) - Module design patterns and conventions
+- [GAM Wiki](https://github.com/GAM-team/GAM/wiki) - GAM command reference and examples
+- [Publishing Guide](PUBLISHING.md) - Local test publish and PowerShell Gallery release workflow
 
 ## Roadmap
 
-- [ ] Publish to PowerShell Gallery
-- [ ] Add Pester tests
-- [ ] Add CI/CD pipeline
+- [ ] Publish initial `1.0.0` release to PowerShell Gallery
 - [ ] Support for additional GAM features
 - [ ] Cross-platform testing (Windows/macOS/Linux)
 
