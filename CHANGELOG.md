@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced search/filter capabilities
 - Bulk operations from CSV input
 
+## [1.0.2] - TBD
+
+### Changed
+- Updated README with PSGallery install details and explicit MIT license reference
+
 ## [1.0.1] - TBD
 
 ### Fixed
@@ -69,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Minor** (0.x.0): New features, backward compatible
 - **Patch** (0.0.x): Bug fixes, minor improvements
 
-[Unreleased]: https://github.com/electblake/PowerShell-GAM7/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/electblake/PowerShell-GAM7/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/electblake/PowerShell-GAM7/releases/tag/v1.0.2
 [1.0.1]: https://github.com/electblake/PowerShell-GAM7/releases/tag/v1.0.1
 [1.0.0]: https://github.com/electblake/PowerShell-GAM7/releases/tag/v1.0.0

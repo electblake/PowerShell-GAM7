@@ -1,6 +1,6 @@
 @{
   RootModule        = 'GAM7.psm1'
-  ModuleVersion     = '1.0.1'
+  ModuleVersion     = '1.0.2'
   GUID              = 'f4c8d2e1-6a3e-4b9f-c7d4-2e9f5a8b3c6d'
   Author            = 'electblake'
   CompanyName       = 'electblake'
@@ -46,7 +46,7 @@
       )
       ProjectUri   = 'https://github.com/electblake/PowerShell-GAM7'
       LicenseUri   = 'https://github.com/electblake/PowerShell-GAM7/blob/main/LICENSE'
-      ReleaseNotes = '1.0.1 patch release: corrected repository metadata URLs and publishing metadata alignment.'
+      ReleaseNotes = '1.0.2 patch release: README documentation updates and PSGallery install/license clarification.'
     }
   }
 }
