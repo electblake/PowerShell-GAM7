@@ -5,6 +5,7 @@ GAM7 provides PowerShell cmdlets for Google Workspace mailbox lifecycle manageme
 ## Commands
 
 - `Get-Mailbox`
+- `Get-Mail`
 - `Enable-Mailbox`
 - `Disable-Mailbox`
 - `Remove-Mailbox`

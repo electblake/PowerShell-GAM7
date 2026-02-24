@@ -17,6 +17,7 @@ function Export-Mailbox {
 .PARAMETER Query
     Optional Gmail search query to filter messages (e.g., "from:example.com" or "WorkSafeBC").
     Default: -in:spam -in:trash
+    Supports pipeline-by-property-name input.
 .EXAMPLE
     Export-Mailbox -Email user@domain.com
 .EXAMPLE
@@ -34,7 +35,7 @@ param(
     [bool] $Suspended,
     [Parameter(ValueFromPipelineByPropertyName)]
     [bool] $Archived,
-    [Parameter()]
+    [Parameter(ValueFromPipelineByPropertyName)]
     [string] $Query
 )
 

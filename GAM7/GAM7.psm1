@@ -18,6 +18,7 @@ $PublicFunctions = @(
   'Enable-Mailbox',
   'Export-GamAuthSecure',
   'Export-Mailbox',
+  'Get-Mail',
   'Get-Mailbox',
   'Import-GamAuthSecure',
   'Invoke-BulkMailboxAction',

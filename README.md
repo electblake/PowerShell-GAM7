@@ -41,6 +41,9 @@ Import-Module GAM7
 # Get all mailboxes with storage and message counts
 Get-Mailbox | Format-Table -AutoSize
 
+# Get one mailbox
+Get-Mailbox -Email stephen.tracy@northone.com
+
 # Filter active mailboxes only
 Get-Mailbox | Where-Object { -not $_.Suspended -and -not $_.Archived }
 ```
@@ -71,6 +74,24 @@ Export-Mailbox -Email user@domain.com -Query "from:example.com"
 Get-Mailbox | Where-Object { -not $_.Suspended } | Export-Mailbox
 ```
 
+### Search messages
+
+```powershell
+# Search one mailbox (Gmail query syntax)
+Get-Mail -Email stephen.tracy@northone.com -Query "snowflake"
+
+# Keyword-only query also works
+Get-Mail -Email stephen.tracy@northone.com -Query "invoice" -MaxResults 200
+
+# Pipe from Get-Mailbox
+Get-Mailbox -Email stephen.tracy@northone.com | Get-Mail -Query "from:snowflake.com"
+
+# Search then export using the same Email+Query filter
+Get-Mail -Email stephen.tracy@northone.com -Query "snowflake" |
+    Select-Object -Unique Email, Query |
+    Export-Mailbox
+```
+
 ### Backup GAM configuration
 
 ```powershell
@@ -98,6 +119,7 @@ Invoke-BulkMailboxAction -Query "WorkSafeBC"
 
 | Command                    | Description                                           |
 | -------------------------- | ----------------------------------------------------- |
+| `Get-Mail`                 | Search Gmail messages in a mailbox by query           |
 | `Get-Mailbox`              | List domain mailboxes with storage and message counts |
 | `Enable-Mailbox`           | Enable and move user to Active Staff OU               |
 | `Disable-Mailbox`          | Suspend and move user to Disabled Accounts OU         |

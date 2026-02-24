@@ -15,9 +15,9 @@ Describe 'GAM7 Module' {
       { Import-Module $ModulePath -Force -ErrorAction Stop } | Should -Not -Throw
     }
 
-    It 'Should export 12 functions' {
+    It 'Should export 13 functions' {
       $commands = Get-Command -Module GAM7
-      $commands.Count | Should -Be 12
+      $commands.Count | Should -Be 13
     }
 
     It 'Should have valid manifest' {
@@ -43,6 +43,9 @@ Describe 'GAM7 Module' {
     }
     It 'Should export Export-Mailbox' {
       Get-Command -Name 'Export-Mailbox' -Module GAM7 -ErrorAction SilentlyContinue | Should -Not -BeNullOrEmpty
+    }
+    It 'Should export Get-Mail' {
+      Get-Command -Name 'Get-Mail' -Module GAM7 -ErrorAction SilentlyContinue | Should -Not -BeNullOrEmpty
     }
     It 'Should export Get-Mailbox' {
       Get-Command -Name 'Get-Mailbox' -Module GAM7 -ErrorAction SilentlyContinue | Should -Not -BeNullOrEmpty
@@ -99,6 +102,18 @@ Describe 'GAM7 Module' {
       $emailParam = $help.parameters.parameter | Where-Object { $_.name -eq 'Email' }
       $emailParam.pipelineInput | Should -Match 'true'
     }
+
+    It 'Export-Mailbox Query should support pipeline input by property name' {
+      $help = Get-Help Export-Mailbox -Full
+      $queryParam = $help.parameters.parameter | Where-Object { $_.name -eq 'Query' }
+      $queryParam.pipelineInput | Should -Match 'ByPropertyName'
+    }
+
+    It 'Get-Mail should support pipeline input' {
+      $help = Get-Help Get-Mail -Full
+      $emailParam = $help.parameters.parameter | Where-Object { $_.name -eq 'Email' }
+      $emailParam.pipelineInput | Should -Match 'true'
+    }
   }
 
   Context 'Encryption Key Generation' {
@@ -133,9 +148,9 @@ Describe 'GAM7 Module Structure' {
       Test-Path (Join-Path $PSScriptRoot '..' 'GAM7' 'Public') | Should -Be $true
     }
 
-    It 'Should have 12 function files in Public' {
+    It 'Should have 13 function files in Public' {
       $publicFunctions = Get-ChildItem (Join-Path $PSScriptRoot '..' 'GAM7' 'Public') -Filter '*.ps1'
-      $publicFunctions.Count | Should -Be 12
+      $publicFunctions.Count | Should -Be 13
     }
   }
 
