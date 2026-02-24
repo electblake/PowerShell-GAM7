@@ -19,8 +19,8 @@ GAM7 is a PowerShell module that provides a cohesive set of functions for automa
 
 ```powershell
 # Clone the repository
-git clone https://github.com/electblake/gmail_sunset_searcher.git
-cd gmail_sunset_searcher
+git clone https://github.com/electblake/PowerShell-GAM7.git
+cd PowerShell-GAM7
 
 # Import the module
 Import-Module ./GAM7
@@ -254,7 +254,7 @@ Contributions are welcome! Please follow the cohesive patterns documented in [GA
 
 ## Roadmap
 
-- [ ] Publish initial `1.0.0` release to PowerShell Gallery
+- [ ] Publish initial `1.0.1` release to PowerShell Gallery
 - [ ] Support for additional GAM features
 - [ ] Cross-platform testing (Windows/macOS/Linux)
 

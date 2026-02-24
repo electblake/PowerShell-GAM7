@@ -20,6 +20,6 @@ GAM7 provides PowerShell cmdlets for Google Workspace mailbox lifecycle manageme
 
 ## Full documentation
 
-- Project: <https://github.com/electblake/gmail_sunset_searcher>
+- Project: <https://github.com/electblake/PowerShell-GAM7>
 - Usage examples: `GAM7/Examples`
 - Publishing workflow: `PUBLISHING.md`

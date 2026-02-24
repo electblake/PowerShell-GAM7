@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced search/filter capabilities
 - Bulk operations from CSV input
 
+## [1.0.1] - TBD
+
+### Fixed
+- Corrected repository metadata URLs to use `electblake/PowerShell-GAM7`
+- Updated module publishing metadata for patch release
+
 ## [1.0.0] - TBD
 
 ### Added
@@ -63,5 +69,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Minor** (0.x.0): New features, backward compatible
 - **Patch** (0.0.x): Bug fixes, minor improvements
 
-[Unreleased]: https://github.com/electblake/gmail_sunset_searcher/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/electblake/gmail_sunset_searcher/releases/tag/v1.0.0
+[Unreleased]: https://github.com/electblake/PowerShell-GAM7/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/electblake/PowerShell-GAM7/releases/tag/v1.0.1
+[1.0.0]: https://github.com/electblake/PowerShell-GAM7/releases/tag/v1.0.0
