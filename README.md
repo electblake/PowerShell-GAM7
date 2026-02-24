@@ -1,6 +1,6 @@
 # GAM7
 
-PowerShell module for Google Workspace mailbox administration using GAM v7. Install from [PSGallery](https://www.powershellgallery.com/packages/GAM7).
+PowerShell module for Google Workspace mailbox administration using GAM v7. Install from [PSGallery](https://www.powershellgallery.com/packages/GAM7) under [MIT License](LICENSE).
 
 ## Requirements
 
@@ -9,9 +9,11 @@ PowerShell module for Google Workspace mailbox administration using GAM v7. Inst
 
 ## Install
 
+
 ```powershell
 Install-Module -Name GAM7 -Scope CurrentUser
 ```
+_More Options on PSGallery: https://www.powershellgallery.com/packages/GAM7_
 
 ## Usage
 
@@ -28,7 +30,3 @@ Export-Mailbox -Email user@domain.com -Query "from:example.com"
 Get-Help Get-Mailbox -Full
 Get-Help Export-Mailbox -Examples
 ```
-
-## License
-
-[LICENSE](LICENSE).
